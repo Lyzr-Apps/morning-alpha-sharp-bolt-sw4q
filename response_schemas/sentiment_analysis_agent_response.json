@@ -1,0 +1,33 @@
+{
+  "agent_name": "Sentiment Analysis Agent",
+  "agent_id": "69a282b5d6fa89687c20afab",
+  "description": "Searches for the top 3 recent headlines per ticker, analyzes market mood (Bullish/Bearish/Neutral), identifies catalysts (earnings, product launches, regulatory news), and produces a vibe check summary",
+  "agent_type": "json",
+  "accessor": "result",
+  "auto_generated": true,
+  "response_schema": {
+    "ticker": "string",
+    "sentiment": "string",
+    "sentiment_score": "number",
+    "catalysts": ["string"],
+    "headlines": [
+      {
+        "title": "string",
+        "source": "string"
+      }
+    ],
+    "vibe_check": "string"
+  },
+  "example_response": {
+    "ticker": "AAPL",
+    "sentiment": "Bullish",
+    "sentiment_score": 7,
+    "catalysts": ["Strong Q4 earnings beat", "New product launch announcement"],
+    "headlines": [
+      { "title": "Apple Reports Record Revenue", "source": "Reuters" },
+      { "title": "Apple Launches New AI Features", "source": "Bloomberg" },
+      { "title": "Analysts Upgrade Apple Price Target", "source": "CNBC" }
+    ],
+    "vibe_check": "sample string"
+  }
+}

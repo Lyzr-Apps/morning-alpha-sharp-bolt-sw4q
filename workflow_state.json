@@ -1,0 +1,84 @@
+{
+  "agents": {
+    "technical_agent": {
+      "agent_id": "69a282b5b465805dc60ec8d4",
+      "name": "Technical Analysis Agent",
+      "description": "Fetches previous day's close, volume, 52-week high/low via yfinance; calculates 14-day RSI, 50-day MA, 200-day MA; identifies support/resistance levels and generates price action + momentum summary per ticker",
+      "provider": "openai",
+      "model": "gpt-4.1",
+      "temperature": 0.2,
+      "top_p": 1,
+      "type": "sub-agent",
+      "managed_by": "69a282d9e558069e826f0464",
+      "tools": [],
+      "image_output_config": null,
+      "voice_config": null,
+      "file_output": false,
+      "response_schema_file": "response_schemas/technical_analysis_agent_response.json"
+    },
+    "sentiment_agent": {
+      "agent_id": "69a282b5d6fa89687c20afab",
+      "name": "Sentiment Analysis Agent",
+      "description": "Searches for the top 3 recent headlines per ticker, analyzes market mood (Bullish/Bearish/Neutral), identifies catalysts (earnings, product launches, regulatory news), and produces a vibe check summary",
+      "provider": "perplexity",
+      "model": "sonar-pro",
+      "temperature": 0.2,
+      "top_p": 1,
+      "type": "sub-agent",
+      "managed_by": "69a282d9e558069e826f0464",
+      "tools": [],
+      "image_output_config": null,
+      "voice_config": null,
+      "file_output": false,
+      "response_schema_file": "response_schemas/sentiment_analysis_agent_response.json"
+    },
+    "manager_agent": {
+      "agent_id": "69a282d9e558069e826f0464",
+      "name": "Stock Analysis Coordinator",
+      "description": "Orchestrates the daily analysis pipeline - routes watchlist tickers to sub-agents, aggregates technical + sentiment results into a comparative color-coded HTML report, and sends the final email via Gmail",
+      "provider": "openai",
+      "model": "gpt-4.1",
+      "temperature": 0.3,
+      "top_p": 1,
+      "type": "manager",
+      "managed_agents": [
+        "69a282b5b465805dc60ec8d4",
+        "69a282b5d6fa89687c20afab"
+      ],
+      "tools": ["GMAIL_SEND_EMAIL"],
+      "image_output_config": null,
+      "voice_config": null,
+      "file_output": false,
+      "response_schema_file": "response_schemas/stock_analysis_coordinator_response.json"
+    },
+    "qa_agent": {
+      "agent_id": "69a282b5e558069e826f0462",
+      "name": "Dashboard Q&A Agent",
+      "description": "Handles on-demand stock questions from the web dashboard - provides real-time comparative analysis, answers ad-hoc queries about watchlist performance, and delivers instant insights",
+      "provider": "perplexity",
+      "model": "sonar-pro",
+      "temperature": 0.4,
+      "top_p": 0.95,
+      "type": "independent",
+      "tools": [],
+      "image_output_config": null,
+      "voice_config": null,
+      "file_output": false,
+      "response_schema_file": "response_schemas/dashboard_q_a_agent_response.json"
+    }
+  },
+  "schedules": {
+    "daily_morning_report": {
+      "schedule_id": "69a282de25d4d77f732f15ec",
+      "agent_id": "69a282d9e558069e826f0464",
+      "agent_name": "Stock Analysis Coordinator",
+      "cron_expression": "0 8 * * *",
+      "timezone": "America/New_York",
+      "message": "Run the daily stock analysis pipeline for the configured watchlist tickers and send the report email.",
+      "max_retries": 2,
+      "retry_delay": 300,
+      "is_active": false,
+      "description": "Daily at 8:00 AM ET"
+    }
+  }
+}

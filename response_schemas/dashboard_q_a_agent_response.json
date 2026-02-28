@@ -1,0 +1,28 @@
+{
+  "agent_name": "Dashboard Q&A Agent",
+  "agent_id": "69a282b5e558069e826f0462",
+  "description": "Handles on-demand stock questions from the web dashboard - provides real-time comparative analysis, answers ad-hoc queries about watchlist performance, and delivers instant insights",
+  "agent_type": "json",
+  "accessor": "result",
+  "auto_generated": true,
+  "response_schema": {
+    "answer": "string",
+    "stocks_mentioned": ["string"],
+    "data_points": [
+      {
+        "metric": "string",
+        "value": "string",
+        "context": "string"
+      }
+    ],
+    "recommendation": "string"
+  },
+  "example_response": {
+    "answer": "sample string",
+    "stocks_mentioned": ["AAPL", "MSFT"],
+    "data_points": [
+      { "metric": "Current Price", "value": "$185.50", "context": "Up 1.2% today" }
+    ],
+    "recommendation": "sample string"
+  }
+}

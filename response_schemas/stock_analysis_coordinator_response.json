@@ -1,0 +1,28 @@
+{
+  "agent_name": "Stock Analysis Coordinator",
+  "agent_id": "69a282d9e558069e826f0464",
+  "description": "Orchestrates the daily analysis pipeline \u2014 routes watchlist tickers to sub-agents, aggregates technical + sentiment results into a comparative color-coded HTML report, and sends the final email via Gmail",
+  "agent_type": "json",
+  "accessor": "result",
+  "auto_generated": true,
+  "response_schema": {
+    "report_date": "string",
+    "tickers_analyzed": [
+      "string"
+    ],
+    "overall_market_mood": "string",
+    "email_sent": "boolean",
+    "email_recipient": "string",
+    "report_summary": "string"
+  },
+  "example_response": {
+    "report_date": "sample string",
+    "tickers_analyzed": [
+      "sample string"
+    ],
+    "overall_market_mood": "sample string",
+    "email_sent": false,
+    "email_recipient": "sample string",
+    "report_summary": "sample string"
+  }
+}
