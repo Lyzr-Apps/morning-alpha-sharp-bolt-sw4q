@@ -33,24 +33,35 @@ export default function EmailHistorySection() {
   const [error, setError] = useState('')
   const [expandedId, setExpandedId] = useState<string | null>(null)
 
-  const fetchLogs = async () => {
+  const fetchLogs = async (isInitial = false) => {
     setLoading(true)
-    setError('')
+    if (!isInitial) setError('')
     try {
       const result = await getScheduleLogs(SCHEDULE_ID, { limit: 50 })
-      if (result.success) {
+      if (result && result.success) {
         setLogs(Array.isArray(result.executions) ? result.executions : [])
-      } else {
-        setError(result.error ?? 'Failed to fetch logs')
+        setError('')
+      } else if (result && result.error) {
+        // Only show error on manual refresh, not initial load
+        if (!isInitial) {
+          setError(result.error)
+        }
       }
-    } catch (e) {
-      setError('Network error fetching logs')
+    } catch (e: any) {
+      // On initial load, silently fail — schedule may just be new with no logs
+      if (!isInitial) {
+        setError('Unable to load logs. Click Refresh to retry.')
+      }
     }
     setLoading(false)
   }
 
   useEffect(() => {
-    fetchLogs()
+    // Defer initial fetch to avoid hydration/timing issues with fetchWrapper
+    const timer = setTimeout(() => {
+      fetchLogs(true)
+    }, 800)
+    return () => clearTimeout(timer)
   }, [])
 
   const parseOutput = (output: string): string => {
@@ -70,7 +81,7 @@ export default function EmailHistorySection() {
           <h1 className="text-lg font-bold tracking-tight text-foreground">Email History</h1>
           <p className="text-xs text-muted-foreground mt-1">Scheduled execution logs for the Morning Alpha report.</p>
         </div>
-        <Button onClick={fetchLogs} disabled={loading} variant="outline" size="sm" className="border-border text-foreground text-xs">
+        <Button onClick={() => fetchLogs(false)} disabled={loading} variant="outline" size="sm" className="border-border text-foreground text-xs">
           <FiRefreshCw className={`w-3.5 h-3.5 mr-1.5 ${loading ? 'animate-spin' : ''}`} /> Refresh
         </Button>
       </div>

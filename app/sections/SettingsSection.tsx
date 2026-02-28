@@ -58,7 +58,13 @@ export default function SettingsSection() {
         setPrefs({ ...DEFAULT_PREFS, ...parsed })
       }
     } catch {}
-    fetchSchedules()
+    // Defer schedule fetch to avoid hydration/timing issues with fetchWrapper
+    const timer = setTimeout(() => {
+      fetchSchedules().catch(() => {
+        setScheduleStatus('Unable to load schedule')
+      })
+    }, 800)
+    return () => clearTimeout(timer)
   }, [])
 
   useEffect(() => {
